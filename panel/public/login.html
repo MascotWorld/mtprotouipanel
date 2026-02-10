@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MTProto Admin Login</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="auth-page">
+  <main class="auth-card">
+    <h1>MTProto Proxy Admin</h1>
+    <p>Вход только для администратора</p>
+    <form id="loginForm">
+      <label>
+        Логин
+        <input type="text" name="login" required autocomplete="username">
+      </label>
+      <label>
+        Пароль
+        <input type="password" name="password" required autocomplete="current-password">
+      </label>
+      <button type="submit">Войти</button>
+      <p id="loginError" class="error"></p>
+    </form>
+  </main>
+  <script>
+    const form = document.getElementById('loginForm');
+    const errorNode = document.getElementById('loginError');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      errorNode.textContent = '';
+
+      const formData = new FormData(form);
+      const payload = {
+        login: formData.get('login'),
+        password: formData.get('password')
+      };
+
+      const resp = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (resp.ok) {
+        window.location.href = '/';
+        return;
+      }
+
+      const data = await resp.json().catch(() => ({ error: 'Ошибка входа' }));
+      errorNode.textContent = data.error || 'Ошибка входа';
+    });
+  </script>
+</body>
+</html>

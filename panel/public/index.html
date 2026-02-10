@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MTProto Proxy Admin</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>MTProto Proxy Admin</h1>
+      <p id="statusLine" class="muted">Загрузка статуса...</p>
+    </div>
+    <div class="topbar-actions">
+      <button id="syncBtn">Синхронизировать прокси</button>
+      <button id="cleanupBtn" class="secondary">Удалить просроченных</button>
+      <button id="logoutBtn" class="danger">Выйти</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="card">
+      <h2 id="formTitle">Создать клиента</h2>
+      <form id="clientForm" class="form-grid">
+        <input type="hidden" name="clientId" value="">
+
+        <label>
+          Название клиента
+          <input type="text" name="name" placeholder="Например, user-telegram-1" required>
+        </label>
+
+        <label>
+          Тип секрета
+          <select name="secretMode" id="secretMode">
+            <option value="secure">Secure (ee + random)</option>
+            <option value="fake_tls">Fake TLS (dd + host)</option>
+            <option value="plain">Plain (random)</option>
+            <option value="custom">Custom secret</option>
+          </select>
+        </label>
+
+        <label id="fakeTlsHostWrap" class="hidden">
+          Fake TLS host (SNI)
+          <input type="text" name="fakeTlsHost" placeholder="google.com">
+        </label>
+
+        <label id="customSecretWrap" class="hidden">
+          Custom secret (hex)
+          <input type="text" name="customSecret" placeholder="ee... или dd...">
+        </label>
+
+        <label>
+          Срок действия
+          <select name="expiresPreset" id="expiresPreset">
+            <option value="1m">1 месяц</option>
+            <option value="3m">3 месяца</option>
+            <option value="6m">6 месяцев</option>
+            <option value="1y">1 год</option>
+            <option value="7d">7 дней</option>
+            <option value="custom">Кастомная дата</option>
+            <option value="never">Без срока</option>
+          </select>
+        </label>
+
+        <label id="customDateWrap" class="hidden">
+          Дата окончания
+          <input type="datetime-local" name="customExpiresAt">
+        </label>
+
+        <label class="checkbox hidden" id="regenerateWrap">
+          <input type="checkbox" name="regenerateSecret" checked>
+          Перегенерировать secret при сохранении
+        </label>
+
+        <div class="form-actions">
+          <button type="submit" id="submitBtn">Создать</button>
+          <button type="button" id="cancelEditBtn" class="secondary hidden">Отменить редактирование</button>
+        </div>
+      </form>
+      <p id="formError" class="error"></p>
+    </section>
+
+    <section class="card">
+      <h2>Клиенты</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Название</th>
+              <th>Secret</th>
+              <th>Ссылка</th>
+              <th>Тип</th>
+              <th>Истекает</th>
+              <th>Статус</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody id="clientsBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

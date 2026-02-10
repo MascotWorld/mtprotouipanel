@@ -1,0 +1,53 @@
+name: mtprotouipanel
+
+services:
+  panel:
+    build:
+      context: ./panel
+    container_name: mtproto_admin_panel
+    restart: unless-stopped
+    environment:
+      PORT: "3000"
+      ADMIN_LOGIN: "admin"
+      ADMIN_PASSWORD: "change-me-now"
+      SESSION_SECRET: "change-this-session-secret"
+      DATA_DIR: "/app/data"
+      STACK_DIR: "/opt/stack"
+      COMPOSE_FILE: "/opt/stack/docker-compose.yml"
+      SECRETS_ENV_FILE: "/opt/stack/proxy/mtproxy.env"
+      COMPOSE_PROJECT_NAME: "mtprotouipanel"
+      PROXY_PUBLIC_HOST: "${PROXY_PUBLIC_HOST:-}"
+      PROXY_PUBLIC_PORT: "${PROXY_PUBLIC_PORT:-3443}"
+      PUBLIC_IP_REFRESH_SECONDS: "${PUBLIC_IP_REFRESH_SECONDS:-900}"
+      DEFAULT_FAKE_TLS_HOST: "${DEFAULT_FAKE_TLS_HOST:-google.com}"
+      MAX_PROXY_SECRETS: "${MAX_PROXY_SECRETS:-16}"
+      ENABLE_DOCKER_SYNC: "true"
+      CLEANUP_INTERVAL_SECONDS: "60"
+    volumes:
+      - panel_data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./:/opt/stack
+    ports:
+      - "${PANEL_PORT:-8080}:3000"
+    depends_on:
+      - mtproxy
+
+  mtproxy:
+    image: mtproxy/mtproxy:latest
+    container_name: mtproto_proxy
+    restart: unless-stopped
+    environment:
+      PORT: "${PROXY_PORT:-3443}"
+      WORKERS: "${MTP_WORKERS:-2}"
+      TAG: "${MTP_TAG:-}"
+    env_file:
+      - ./proxy/mtproxy.env
+    ports:
+      - "${PROXY_PORT:-3443}:${PROXY_PORT:-3443}"
+      - "${PROXY_HTTP_PORT:-8888}:2398"
+    volumes:
+      - proxy_data:/data
+
+volumes:
+  panel_data:
+  proxy_data:
