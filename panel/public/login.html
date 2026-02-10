@@ -7,22 +7,27 @@
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body class="auth-page">
+  <div class="ambient" aria-hidden="true"></div>
+
   <main class="auth-card">
-    <h1>MTProto Proxy Admin</h1>
-    <p>Вход только для администратора</p>
-    <form id="loginForm">
+    <p class="eyebrow">MTProto Control Plane</p>
+    <h1>Admin Login</h1>
+    <p class="muted">Вход только для администратора панели</p>
+
+    <form id="loginForm" class="form-grid auth-form">
       <label>
-        Логин
+        <span>Логин</span>
         <input type="text" name="login" required autocomplete="username">
       </label>
       <label>
-        Пароль
+        <span>Пароль</span>
         <input type="password" name="password" required autocomplete="current-password">
       </label>
       <button type="submit">Войти</button>
       <p id="loginError" class="error"></p>
     </form>
   </main>
+
   <script>
     const form = document.getElementById('loginForm');
     const errorNode = document.getElementById('loginError');

@@ -10,6 +10,13 @@
 
 ## 1. Настройка
 
+Склонировать репозиторий (папка `mtprotouipanel` создастся автоматически):
+
+```bash
+git clone git@github.com:MascotWorld/mtprotouipanel.git
+cd mtprotouipanel
+```
+
 Измените в `docker-compose.yml` логин/пароль админки:
 
 ```yaml

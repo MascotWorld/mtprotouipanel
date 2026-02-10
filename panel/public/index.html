@@ -6,12 +6,16 @@
   <title>MTProto Proxy Admin</title>
   <link rel="stylesheet" href="/static/styles.css">
 </head>
-<body>
-  <header class="topbar">
-    <div>
-      <h1>MTProto Proxy Admin</h1>
-      <p id="statusLine" class="muted">Загрузка статуса...</p>
+<body class="dashboard-page">
+  <div class="ambient" aria-hidden="true"></div>
+
+  <header class="topbar shell">
+    <div class="brand-block">
+      <p class="eyebrow">MTProto Control Plane</p>
+      <h1>Proxy Admin Console</h1>
+      <p id="statusLine" class="muted status-line">Загрузка статуса...</p>
     </div>
+
     <div class="topbar-actions">
       <button id="syncBtn">Синхронизировать прокси</button>
       <button id="cleanupBtn" class="secondary">Удалить просроченных</button>
@@ -19,19 +23,23 @@
     </div>
   </header>
 
-  <main class="layout">
-    <section class="card">
-      <h2 id="formTitle">Создать клиента</h2>
+  <main class="layout shell">
+    <section class="card form-card">
+      <div class="section-head">
+        <h2 id="formTitle">Создать клиента</h2>
+        <p class="muted">Управление ключами и сроками доступа</p>
+      </div>
+
       <form id="clientForm" class="form-grid">
         <input type="hidden" name="clientId" value="">
 
         <label>
-          Название клиента
-          <input type="text" name="name" placeholder="Например, user-telegram-1" required>
+          <span>Название клиента</span>
+          <input type="text" name="name" placeholder="например, user-telegram-1" required>
         </label>
 
         <label>
-          Тип секрета
+          <span>Тип секрета</span>
           <select name="secretMode" id="secretMode">
             <option value="secure">Secure (ee + random)</option>
             <option value="fake_tls">Fake TLS (dd + host)</option>
@@ -41,17 +49,17 @@
         </label>
 
         <label id="fakeTlsHostWrap" class="hidden">
-          Fake TLS host (SNI)
-          <input type="text" name="fakeTlsHost" placeholder="google.com">
+          <span>Fake TLS host (SNI)</span>
+          <input type="text" name="fakeTlsHost" placeholder="ya.ru">
         </label>
 
         <label id="customSecretWrap" class="hidden">
-          Custom secret (hex)
+          <span>Custom secret (hex)</span>
           <input type="text" name="customSecret" placeholder="ee... или dd...">
         </label>
 
         <label>
-          Срок действия
+          <span>Срок действия</span>
           <select name="expiresPreset" id="expiresPreset">
             <option value="1m">1 месяц</option>
             <option value="3m">3 месяца</option>
@@ -64,7 +72,7 @@
         </label>
 
         <label id="customDateWrap" class="hidden">
-          Дата окончания
+          <span>Дата окончания</span>
           <input type="datetime-local" name="customExpiresAt">
         </label>
 
@@ -78,11 +86,16 @@
           <button type="button" id="cancelEditBtn" class="secondary hidden">Отменить редактирование</button>
         </div>
       </form>
+
       <p id="formError" class="error"></p>
     </section>
 
-    <section class="card">
-      <h2>Клиенты</h2>
+    <section class="card table-card">
+      <div class="section-head">
+        <h2>Клиенты</h2>
+        <p class="muted">Активные и просроченные доступы</p>
+      </div>
+
       <div class="table-wrap">
         <table>
           <thead>

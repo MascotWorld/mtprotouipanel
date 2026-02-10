@@ -61,6 +61,12 @@ function statusText(client) {
   return 'Активен';
 }
 
+function statusClass(client) {
+  if (client.expired) return 'status-expired';
+  if (!client.expiresAt) return 'status-nolimit';
+  return 'status-active';
+}
+
 function prettyDate(iso) {
   if (!iso) return 'Никогда';
   const dt = new Date(iso);
@@ -89,7 +95,7 @@ function renderClients() {
       <td>${linkHtml}</td>
       <td>${escapeHtml(client.secretMode)}</td>
       <td>${escapeHtml(prettyDate(client.expiresAt))}</td>
-      <td>${escapeHtml(statusText(client))}</td>
+      <td><span class="status-badge ${statusClass(client)}">${escapeHtml(statusText(client))}</span></td>
       <td class="actions-cell">
         <button data-action="edit" data-id="${escapeHtml(client.id)}" class="secondary">Редактировать</button>
         <button data-action="delete" data-id="${escapeHtml(client.id)}" class="danger">Удалить</button>
