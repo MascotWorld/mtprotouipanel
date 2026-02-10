@@ -10,7 +10,6 @@ services:
       PORT: "3000"
       ADMIN_LOGIN: "admin"
       ADMIN_PASSWORD: "change-me-now"
-      SESSION_SECRET: "change-this-session-secret"
       DATA_DIR: "/app/data"
       STACK_DIR: "/opt/stack"
       COMPOSE_FILE: "/opt/stack/docker-compose.yml"

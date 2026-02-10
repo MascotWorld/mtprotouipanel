@@ -12,7 +12,6 @@ const app = express();
 const PORT = Number(process.env.PORT || 3000);
 const ADMIN_LOGIN = process.env.ADMIN_LOGIN || 'admin';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'change-me-now';
-const SESSION_SECRET = process.env.SESSION_SECRET || 'change-this-session-secret';
 
 const DATA_DIR = process.env.DATA_DIR || '/app/data';
 const CLIENTS_FILE = path.join(DATA_DIR, 'clients.json');
@@ -142,6 +141,25 @@ function writeJson(filePath, value) {
   fs.writeFileSync(tmp, JSON.stringify(value, null, 2), 'utf8');
   fs.renameSync(tmp, filePath);
 }
+
+function getOrCreateSessionSecret() {
+  const fromEnv = (process.env.SESSION_SECRET || '').trim();
+  if (fromEnv) {
+    return fromEnv;
+  }
+
+  ensureDir(DATA_DIR);
+  const state = readJson(STATE_FILE, {});
+  if (typeof state.sessionSecret === 'string' && state.sessionSecret.length >= 32) {
+    return state.sessionSecret;
+  }
+
+  state.sessionSecret = crypto.randomBytes(48).toString('hex');
+  writeJson(STATE_FILE, state);
+  return state.sessionSecret;
+}
+
+const SESSION_SECRET = getOrCreateSessionSecret();
 
 function randomHex(bytes) {
   return crypto.randomBytes(bytes).toString('hex');

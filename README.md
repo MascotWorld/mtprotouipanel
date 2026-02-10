@@ -25,8 +25,10 @@ services:
     environment:
       ADMIN_LOGIN: "admin"
       ADMIN_PASSWORD: "change-me-now"
-      SESSION_SECRET: "change-this-session-secret"
 ```
+
+`SESSION_SECRET` теперь генерируется автоматически внутри контейнера и сохраняется в `panel_data`.
+При необходимости можно передать свой через переменную окружения `SESSION_SECRET`.
 
 Порты панели и прокси задаются через переменные в `.env`:
 
